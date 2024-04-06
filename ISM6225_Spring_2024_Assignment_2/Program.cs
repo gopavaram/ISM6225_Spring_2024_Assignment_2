@@ -6,6 +6,7 @@ WRITE YOUR CODE IN THE RESPECTIVE QUESTION FUNCTION BLOCK
 
 */
 
+using System.Numerics;
 using System.Text;
 
 namespace ISM6225_Spring_2024_Assignment_2
@@ -18,7 +19,7 @@ namespace ISM6225_Spring_2024_Assignment_2
             Console.WriteLine("Question 1:");
             int[] nums1 = { 0, 0, 1, 1, 1, 2, 2, 3, 3, 4 };
             int numberOfUniqueNumbers = RemoveDuplicates(nums1);
-            Console.WriteLine(numberOfUniqueNumbers);
+            Console.WriteLine($"Output: {numberOfUniqueNumbers}, nums = [{string.Join(",", nums1[..numberOfUniqueNumbers])}]");
 
             //Question 2:
             Console.WriteLine("Question 2:");
@@ -36,7 +37,7 @@ namespace ISM6225_Spring_2024_Assignment_2
 
             //Question 4:
             Console.WriteLine("Question 4:");
-            int[] nums4 = { 1, 1, 0, 1, 1, 1 };
+            int[] nums4 = { 1, 1, 0, 1, 1,1,1,1,1 };
             int maxOnes = FindMaxConsecutiveOnes(nums4);
             Console.WriteLine(maxOnes);
 
@@ -48,13 +49,13 @@ namespace ISM6225_Spring_2024_Assignment_2
 
             //Question 6:
             Console.WriteLine("Question 6:");
-            int[] nums5 = { 3,6,9,1 };
+            int[] nums5 = { 10, 3, 8, 2, 16 };
             int maxGap = MaximumGap(nums5);
             Console.WriteLine(maxGap);
 
             //Question 7:
             Console.WriteLine("Question 7:");
-            int[] nums6 = { 2,1,2 };
+            int[] nums6 = { 2, 1, 2 };
             int largestPerimeterResult = LargestPerimeter(nums6);
             Console.WriteLine(largestPerimeterResult);
 
@@ -99,14 +100,32 @@ namespace ISM6225_Spring_2024_Assignment_2
         {
             try
             {
-                // Write your code here and you can modify the return value according to the requirements
-                return 0;
+                if (nums.Length == 0) return 0; // Handling null values or empty array
+                int ind = 0; // index of array
+                //one to track unique elements or index and another to iterate through the array (i)
+                // If the current element is different from the one at index, it's a new unique element, so move index forward and update it
+                for (int i = 1; i < nums.Length; i++)
+                {
+                    if (nums[i] != nums[ind])
+                    {
+                        ind++;
+                        nums[ind] = nums[i];
+                    }
+                }
+                return ind + 1;
             }
             catch (Exception)
             {
                 throw;
             }
         }
+        /* Self- Reflection:
+            This code removes duplicate numbers from a sorted list, keeping only one copy of each unique number. 
+            It then counts how many unique numbers are left and updates the list accordingly. 
+            It works by comparing each number with the one before it. If they're different, it keeps the current number as unique and moves forward. 
+            Finally, it returns the count of unique numbers.
+        */
+
 
         /*
         
@@ -134,14 +153,38 @@ namespace ISM6225_Spring_2024_Assignment_2
         {
             try
             {
-                // Write your code here and you can modify the return value according to the requirements
-                return new List<int>();
+                // Start by setting up an index to track the next non-zero element's position.
+                int Ind = 0;
+
+                // Iterate through the array
+                for (int i = 0; i < nums.Length; i++)
+                {
+                    // If the current element is non-zero, move it to the nonZeroIndex position and increment Ind
+                    if (nums[i] != 0)
+                    {
+                        nums[Ind] = nums[i];
+                        Ind++;
+                    }
+                }
+
+                // Fill the remaining positions from nonZeroIndex to the end of the array with zeros
+                while (Ind < nums.Length)
+                {
+                    nums[Ind] = 0;
+                    Ind++;
+                }
+
+                return new List<int>(nums);
             }
             catch (Exception)
             {
                 throw;
             }
         }
+        /* Self- Reflection:
+
+            This code reorganizes an integer array, moving all zeros to the end while preserving the order of non-zero elements.
+         */
 
         /*
 
@@ -185,14 +228,67 @@ namespace ISM6225_Spring_2024_Assignment_2
         {
             try
             {
-                // Write your code here and you can modify the return value according to the requirements
-                return new List<IList<int>>();
+
+                IList<IList<int>> tripletsList = new List<IList<int>>(); // Initialize list to store unique triplets
+                Array.Sort(nums); // Sort the input array in ascending order
+
+                // Iterate through the array, leaving out the last two elements to form a triplet
+                for (int idx = 0; idx < nums.Length - 2; idx++)
+                {
+                    // Skip duplicate elements to avoid duplicate triplets
+                    if (idx > 0 && nums[idx] == nums[idx - 1])
+                        continue;
+
+                    int leftPtr = idx + 1; // Pointer for the element after the current element
+                    int rightPtr = nums.Length - 1; // Pointer for the last element of the array
+
+                    // Use the two-pointer approach to find the other two elements for forming the triplet
+                    while (leftPtr < rightPtr)
+                    {
+                        int tripletSum = nums[idx] + nums[leftPtr] + nums[rightPtr]; // Calculate the sum of the current triplet
+
+                        // If the sum is zero, we have found a triplet
+                        if (tripletSum == 0)
+                        {
+                            // Add the triplet to the result list
+                            tripletsList.Add(new List<int> { nums[idx], nums[leftPtr], nums[rightPtr] });
+
+                            // Skip duplicates for the left and right pointers
+                            while (leftPtr < rightPtr && nums[leftPtr] == nums[leftPtr + 1])
+                                leftPtr++;
+                            while (leftPtr < rightPtr && nums[rightPtr] == nums[rightPtr - 1])
+                                rightPtr--;
+
+                            // Move the pointers to find other triplets
+                            leftPtr++;
+                            rightPtr--;
+                        }
+                        else if (tripletSum < 0)
+                        {
+                            leftPtr++; // Move the left pointer to increase the sum
+                        }
+                        else
+                        {
+                            rightPtr--; // Move the right pointer to decrease the sum
+                        }
+                    }
+                }
+
+
+                return tripletsList; // Return list of unique triplets
             }
             catch (Exception)
             {
                 throw;
             }
         }
+        /*
+         * Self-Reflection:
+            This code looks for sets of three numbers in a list where if you add them up, they equal zero.
+            It sorts the list first to make it easier to search through. 
+            Then, it checks each set of three numbers to see if they fit the rule. If they do, it adds them to the list.
+         */
+
 
         /*
 
@@ -220,14 +316,40 @@ namespace ISM6225_Spring_2024_Assignment_2
         {
             try
             {
-                // Write your code here and you can modify the return value according to the requirements
-                return 0;
+                int Total1 = 0; // store the maximum count of consecutive 1's
+                int count = 0;    //store the current count of consecutive 1's
+
+                foreach (int num in nums)
+                {
+                    // If the current element is 1, increment the count
+                    if (num == 1)
+                    {
+                        count++;
+                    }
+                    else
+                    {
+                        // If the current element is 0, update maxCount if count is greater,
+                        // then reset count to 0
+                        Total1 = Math.Max(Total1, count);
+                        count = 0;
+                    }
+                }
+
+                // Update Total1 if the last sequence of 1's is longer than any previous ones
+                Total1 = Math.Max(Total1, count);
+                return Total1;
             }
             catch (Exception)
             {
                 throw;
             }
         }
+
+        /*This code counts how many times there are back-to-back ones in a row in a line of numbers. 
+          If it spots a zero, it stops counting and checks if it's seen more ones in a row than before. Then it tells you the longest streak of ones it found. 
+          It's like counting how many times you see the same color in a row in a line of colored blocks.
+        */
+
 
         /*
 
@@ -252,18 +374,36 @@ namespace ISM6225_Spring_2024_Assignment_2
 
         */
 
-        public static int BinaryToDecimal(int binary)
+        public static int BinaryToDecimal(int binaryNumber)
         {
             try
             {
-                // Write your code here and you can modify the return value according to the requirements
-                return 0;
+                int decimalValue = 0; // Start with decimal value set to 0
+                int baseValue = 1; // Set the base value to 1
+
+                // Convert binary number to decimal
+                while (binaryNumber != 0)
+                {
+                    int digit = binaryNumber % 10; // Extract the last digit of the binary number
+                    binaryNumber = binaryNumber / 10; // Remove the last digit from the binary number
+
+                    decimalValue = decimalValue + (digit * baseValue); // Update the decimal value
+                    baseValue = baseValue * 2; // Multiply the base value by 2 for the next digit (bit)
+                }
+
+                return decimalValue; // Return the final decimal value after conversion
+
             }
             catch (Exception)
             {
                 throw;
             }
         }
+
+        /* Self- Reflection:
+          This code takes a binary number like a series of on/off switches and adds up their values to get the equivalent decimal number. 
+          It's like counting the total number of lights turned on, where each light represents a power of 2, starting from 1.
+         */
 
         /*
 
@@ -294,14 +434,65 @@ namespace ISM6225_Spring_2024_Assignment_2
         {
             try
             {
-                // Write your code here and you can modify the return value according to the requirements
-                return 0;
+                if (nums.Length < 2)
+                    return 0;
+
+                int maxDifference = 0;
+
+                // Find the smallest and largest elements in the array
+                int minElement = nums[0];
+                int maxElement = nums[0];
+
+                foreach (int element in nums)
+                {
+                    minElement = Math.Min(minElement, element);
+                    maxElement = Math.Max(maxElement, element);
+                }
+
+                // Calculate the size of each segment
+                int segmentSize = Math.Max(1, (maxElement - minElement) / (nums.Length - 1));
+
+                // Calculate the number of segments
+                int numSegments = (maxElement - minElement) / segmentSize + 1;
+
+                // Initialize segments
+                int[] minSegment = new int[numSegments];
+                int[] maxSegment = new int[numSegments];
+                bool[] hasElement = new bool[numSegments];
+
+                // Put elements into segments
+                foreach (int element in nums)
+                {
+                    int segmentIndex = (element - minElement) / segmentSize;
+                    minSegment[segmentIndex] = hasElement[segmentIndex] ? Math.Min(minSegment[segmentIndex], element) : element;
+                    maxSegment[segmentIndex] = hasElement[segmentIndex] ? Math.Max(maxSegment[segmentIndex], element) : element;
+                    hasElement[segmentIndex] = true;
+                }
+
+                // Calculate the maximum difference
+                int previousMax = minElement;
+                for (int i = 0; i < numSegments; i++)
+                {
+                    if (hasElement[i])
+                    {
+                        maxDifference = Math.Max(maxDifference, minSegment[i] - previousMax);
+                        previousMax = maxSegment[i];
+                    }
+                }
+
+                return maxDifference;
+
             }
             catch (Exception)
             {
                 throw;
             }
         }
+        /*  Self- Reflection:
+         This code finds the biggest gap between neighboring numbers in a sorted list. 
+         It splits the range between the smallest and largest numbers into sections and assigns each number to its appropriate section. 
+         Then, it calculates the largest gap between sections with numbers. 
+         Finally, it reports this gap as the result.*/
 
         /*
 
@@ -334,14 +525,31 @@ namespace ISM6225_Spring_2024_Assignment_2
         {
             try
             {
-                // Write your code here and you can modify the return value according to the requirements
-                return 0;
+                if (nums == null || nums.Length < 3)
+                    return 0; // If the array has fewer than 3 elements, return 0
+
+                Array.Sort(nums); // Sort the array in ascending order
+
+                // Start from the end of the sorted array to maximize perimeter
+                for (int i = nums.Length - 1; i >= 2; i--)
+                {
+                    // Check if the current triplet can form a triangle with non-zero area
+                    if (nums[i] < nums[i - 1] + nums[i - 2])
+                        return nums[i] + nums[i - 1] + nums[i - 2]; // If possible, return the perimeter of the triangle
+                }
+
+                return 0; // If no triangle with non-zero area is possible, return 0
             }
             catch (Exception)
             {
                 throw;
             }
         }
+        /* Self- Reflection:
+         This code finds the largest perimeter of a triangle that can be formed from three lengths given in an array. 
+         It first sorts the array in ascending order. Then, starting from the end of the sorted array, it checks if three consecutive lengths can form a triangle with a non-zero area. 
+         If such a triangle is found, it returns the perimeter of that triangle. If no such triangle can be formed, it returns 0.
+         */
 
         /*
 
@@ -388,14 +596,23 @@ namespace ISM6225_Spring_2024_Assignment_2
         {
             try
             {
-                // Write your code here and you can modify the return value according to the requirements
-                return "";
+                while (s.Contains(part))
+                {
+                    int index = s.IndexOf(part); // Determine the index of the first occurrence of the part within the string
+                    s = s.Remove(index, part.Length); // Remove the part from the string, starting at the determined index
+                }
+                return s; // Once all occurrences of the part have been removed from the string, return the modified string
+
             }
             catch (Exception)
             {
                 throw;
             }
         }
+        /* Self- Reflection:
+         This code acts like a text cleaner, removing specific unwanted words or phrases from a text. 
+         It searches through the text for the first instance of the unwanted term, deletes it, and then repeats the process. 
+         It continues doing this until the term can no longer be found, ensuring the final text doesn't contain that particular sequence of words.*/
 
         /* Inbuilt Functions - Don't Change the below functions */
         static string ConvertIListToNestedList(IList<IList<int>> input)
