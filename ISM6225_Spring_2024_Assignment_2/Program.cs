@@ -19,7 +19,7 @@ namespace ISM6225_Spring_2024_Assignment_2
             Console.WriteLine("Question 1:");
             int[] nums1 = { 0, 0, 1, 1, 1, 2, 2, 3, 3, 4 };
             int numberOfUniqueNumbers = RemoveDuplicates(nums1);
-            Console.WriteLine($"Output: {numberOfUniqueNumbers}, nums = [{string.Join(",", nums1[..numberOfUniqueNumbers])}]");
+            Console.WriteLine($"Output: {numberOfUniqueNumbers}, nums = [{string.Join(",", nums1)}]");
 
             //Question 2:
             Console.WriteLine("Question 2:");
@@ -100,19 +100,23 @@ namespace ISM6225_Spring_2024_Assignment_2
         {
             try
             {
-                if (nums.Length == 0) return 0; // Handling null values or empty array
-                int ind = 0; // index of array
-                //one to track unique elements or index and another to iterate through the array (i)
-                // If the current element is different from the one at index, it's a new unique element, so move index forward and update it
+                if (nums.Length == 0) return 0; // Handles empty array case
+                int idx = 0; // Keeps track of current element's position
+                             // Use two pointers: one for unique elements (idx) and another to iterate (i)
+                             // If current element is different from the one at idx, it's new, so update idx
                 for (int i = 1; i < nums.Length; i++)
                 {
-                    if (nums[i] != nums[ind])
+                    if (nums[i] != nums[idx])
                     {
-                        ind++;
-                        nums[ind] = nums[i];
+                        idx++;
+                        nums[idx] = nums[i];
                     }
                 }
-                return ind + 1;
+                for (int i = idx+1; i < nums.Length; i++)
+                {
+                    nums[i] = 'V';
+                }
+                return idx + 1; // Returns the new length of unique elements
             }
             catch (Exception)
             {
