@@ -346,7 +346,8 @@ namespace ISM6225_Spring_2024_Assignment_2
         }
 
         /*This code counts how many times there are back-to-back ones in a row in a line of numbers. 
-          If it spots a zero, it stops counting and checks if it's seen more ones in a row than before. Then it tells you the longest streak of ones it found. 
+          If it spots a zero, it stops counting and checks if it's seen more ones in a row than before. 
+          Then it tells you the longest streak of ones it found. 
           It's like counting how many times you see the same color in a row in a line of colored blocks.
         */
 
@@ -354,7 +355,8 @@ namespace ISM6225_Spring_2024_Assignment_2
         /*
 
         Question 5:
-        You are tasked with writing a program that converts a binary number to its equivalent decimal representation without using bitwise operators or the `Math.Pow` function. You will implement a function called `BinaryToDecimal` which takes an integer representing a binary number as input and returns its decimal equivalent. 
+        You are tasked with writing a program that converts a binary number to its equivalent decimal representation without using bitwise operators or the `Math.Pow` function. 
+        You will implement a function called `BinaryToDecimal` which takes an integer representing a binary number as input and returns its decimal equivalent. 
 
         Requirements:
         1. Your program should prompt the user to input a binary number as an integer. 
@@ -547,7 +549,8 @@ namespace ISM6225_Spring_2024_Assignment_2
         }
         /* Self- Reflection:
          This code finds the largest perimeter of a triangle that can be formed from three lengths given in an array. 
-         It first sorts the array in ascending order. Then, starting from the end of the sorted array, it checks if three consecutive lengths can form a triangle with a non-zero area. 
+         It first sorts the array in ascending order. 
+        Then, starting from the end of the sorted array, it checks if three consecutive lengths can form a triangle with a non-zero area. 
          If such a triangle is found, it returns the perimeter of that triangle. If no such triangle can be formed, it returns 0.
          */
 
